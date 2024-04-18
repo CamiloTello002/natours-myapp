@@ -1,0 +1,7 @@
+*.env
+.env
+node_modules/
+.cache/
+public/img/users/*
+public/js/bundle.js
+public/img/*

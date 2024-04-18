@@ -1,0 +1,4 @@
+1. user hits a route
+2. when hitting a route that will load a visual, Express will render the corresponding page
+    since it's server-side rendering, it means Express needs some file for rendering it
+    keep in mind that for rendering a page, it needs a pug file in our case
