@@ -4,6 +4,7 @@
   "description": "Learning node, express and  mongoDB",
   "main": "app.js",
   "scripts": {
+    "start": "node server.js",
     "start:dev": "nodemon server.js",
     "start:prod": "cross-env NODE_ENV=production nodemon server.js",
     "debug:prod": "cross-env NODE_ENV=production ndb server.js",
@@ -55,5 +56,8 @@
     "parcel-bundler": "^1.12.3",
     "prettier": "^3.2.4",
     "supertest": "^6.3.4"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
