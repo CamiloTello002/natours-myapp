@@ -2,6 +2,9 @@
 
 This repository contains an Express.js application developed using Node.js, Express.js for the server, MongoDB for the database, and Pug for server-side rendering. The project was created as part of an Udemy course to learn web development with these technologies.
 
+## Link to web application
+[[Natours site]](https://natours-site-25099ee660e6.herokuapp.com/)
+
 ## Course Information
 
 - **Course Title:** Node.js, Express, MongoDB & More: The Complete Bootcamp 2024
