@@ -7,14 +7,10 @@ const User = require('../../models/userModel');
 
 dotenv.config({ path: './../../.env' });
 
-// MongoDB database URI
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD,
-);
+const databaseString = process.env.DATABASE_URL;
 
 // Connecting to the database
-mongoose.connect(DB).then((con) => {
+mongoose.connect(databaseString).then((con) => {
   console.log('Successful :)');
 });
 
