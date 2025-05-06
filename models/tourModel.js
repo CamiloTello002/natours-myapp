@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
-// const User = require('./userModel');
 
 const opts = {
   toJSON: { virtuals: true },
@@ -53,7 +52,7 @@ const toursSchema = new mongoose.Schema(
       type: Number,
       validate: {
         // This only points to the current doc on NEW document creation
-        validator: function (val) {
+        validator: function(val) {
           return val < this.price;
         },
         message: 'Discount price ({VALUE}) should be below regular price',
@@ -118,14 +117,11 @@ const toursSchema = new mongoose.Schema(
   },
   opts,
 );
-// SETTING AN INDEX
-// toursSchema.index({ price: 1 });
 toursSchema.index({ price: 1, ratingsAverage: -1 });
 toursSchema.index({ slug: 1 });
 toursSchema.index({ startLocation: '2dsphere' });
 
-// VIRTUAL PROPERTIES
-toursSchema.virtual('durationWeeks').get(function () {
+toursSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
 
@@ -135,22 +131,18 @@ toursSchema.virtual('reviews', {
   localField: '_id',
 });
 
-// DOCUMENT MIDDLEWARE
-toursSchema.pre('save', async function (next) {
+toursSchema.pre('save', async function(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-// QUERY MIDDLEWARE
-toursSchema.pre(/^find/, function (next) {
-  // toursSchema.pre('find', function (next) {
+toursSchema.pre(/^find/, function(next) {
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
   next();
 });
 
-// For populating documents
-toursSchema.pre(/^find/, function (next) {
+toursSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'guides',
     select: '-__v -passwordChangedAt',
@@ -158,7 +150,7 @@ toursSchema.pre(/^find/, function (next) {
   next();
 });
 
-toursSchema.post(/^find/, function (docs, next) {
+toursSchema.post(/^find/, function(docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds :)`);
   next();
 });

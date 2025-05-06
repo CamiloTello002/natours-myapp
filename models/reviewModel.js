@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const Tour = require('./tourModel');
 
-// aslkdjfkasdfj
-// 1) Create the schema
 const reviewSchema = new mongoose.Schema(
   {
     user: {
@@ -11,8 +9,6 @@ const reviewSchema = new mongoose.Schema(
       required: [true, 'Review must belong to a user'],
     },
     tour: {
-      // Schema.ObjectId and Schema.Types.ObjectId
-      // yield the same result
       type: mongoose.Schema.Types.ObjectId,
       ref: 'tours',
       required: [true, 'Review must belong to a tour'],
@@ -40,7 +36,7 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 
-reviewSchema.statics.calcAverageRatings = async function (tourId) {
+reviewSchema.statics.calcAverageRatings = async function(tourId) {
   const stats = await this.aggregate([
     {
       $match: { tour: tourId },
@@ -67,30 +63,23 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
   }
 };
 
-// DOCUMENT MIDDLEWARE
-// calculate average right after saving a review
-reviewSchema.post('save', function () {
+reviewSchema.post('save', function() {
   this.constructor.calcAverageRatings(this.tour);
 });
 
-// prevent saving a duplicate review
-reviewSchema.pre('save', async function () {
-  // 1) query the document with the given tour
+reviewSchema.pre('save', async function() {
   const tourReviewed = await Tour.findById(this.tour).select('+reviews');
   console.log(`The review should be: ${this}`);
   console.log(`And the tour should be: ${tourReviewed}`);
   console.log(`The found tour has ${tourReviewed.ratingsQuantity} reviews`);
 });
 
-// QUERY MIDDLEWARE
-// populating document before showing it to the user
-reviewSchema.pre(/^find/, function (next) {
+reviewSchema.pre(/^find/, function(next) {
   this.populate({ path: 'user', select: 'name photo' });
   next();
 });
 
-// calculating average after an update in the review
-reviewSchema.post(/^findOneAnd/, async function (doc) {
+reviewSchema.post(/^findOneAnd/, async function(doc) {
   await doc.constructor.calcAverageRatings(doc.tour);
 });
 
