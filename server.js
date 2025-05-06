@@ -2,23 +2,19 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
 
-// Catches global exceptions :)
 process.on('uncaughtException', (err, reason) => {
   console.log(`Uncaught exception!\nThe reason is ${reason}`);
+  console.log('exception: ', err);
   process.exit(1);
 });
 
 dotenv.config();
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD,
-);
+const databaseString = process.env.DATABASE_URL;
 
-// Connect to database
 mongoose
-  .connect(DB)
-  .then((con) => {
+  .connect(databaseString)
+  .then(() => {
     console.log('Connected to database!');
     console.log(process.env.NODE_ENV);
   })
@@ -27,15 +23,13 @@ mongoose
   });
 
 const port = process.env.PORT || 3000;
-// 3) STARTS SERVER now
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-// Unhandled rejections
-process.on('unhandledRejection', (err, reason, promise) => {
+process.on('unhandledRejection', (_, reason, promise) => {
   console.log(`Unhandled rejection at ${promise}\nThe reason is ${reason}`);
-  server.close((err) => {
+  server.close(() => {
     process.exit(1);
   });
 });
